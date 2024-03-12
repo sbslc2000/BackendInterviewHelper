@@ -1,8 +1,9 @@
 package io.github.sbslc2000.interviewpractice.chatgpt;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 public class Usage {
     private int prompt_tokens;
     private int completion_tokens;

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -21,5 +22,17 @@ public class QuizService {
         }
 
         return quizRepository.getRandomByLevel(level);
+    }
+
+    public List<Quiz> getAllQuizzes() {
+        return quizRepository.findAllByOrderByLevelAscCategoryAsc();
+    }
+
+    public Quiz getQuizById(Long id) {
+        return quizRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid quiz ID"));
+    }
+
+    public Quiz getRandomQuizByCategory(Category category) {
+        return quizRepository.getRandomByCategory(category.toString());
     }
 }

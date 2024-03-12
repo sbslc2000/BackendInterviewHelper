@@ -1,18 +1,15 @@
-import styled from "styled-components";
 import {useEffect, useState} from "react";
-
+import styled from "styled-components";
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 0 120px;
+    margin-top: 10px;
 `;
-
-const LoadingComponent = (props) => {
+const VoiceRecording = () => {
     const [dot, setDot] = useState('');
-
-    const text = props.text || '로딩 중';
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -36,9 +33,10 @@ const LoadingComponent = (props) => {
 
     return (
         <Wrapper>
-            <h1>{text}{dot}</h1>
+            <span>녹음 중입니다{dot}</span>
         </Wrapper>
     );
-};
 
-export default LoadingComponent;
+}
+
+export default VoiceRecording;

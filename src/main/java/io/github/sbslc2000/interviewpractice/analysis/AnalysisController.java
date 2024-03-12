@@ -1,5 +1,7 @@
 package io.github.sbslc2000.interviewpractice.analysis;
 
+import io.github.sbslc2000.interviewpractice.analysis.dto.AnalysisRequest;
+import io.github.sbslc2000.interviewpractice.analysis.dto.AnalysisResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

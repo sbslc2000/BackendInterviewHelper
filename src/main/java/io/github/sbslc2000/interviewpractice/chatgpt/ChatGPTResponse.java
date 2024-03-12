@@ -1,8 +1,9 @@
 package io.github.sbslc2000.interviewpractice.chatgpt;
 
 import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class ChatGPTResponse {
 
     private String id;

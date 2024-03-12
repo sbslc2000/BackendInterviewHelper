@@ -1,8 +1,6 @@
 package io.github.sbslc2000.interviewpractice.quiz;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +20,6 @@ public class Quiz {
 
     private Integer level;
 
-    public static Quiz of(String question, Integer level) {
-        return new Quiz(null, question, level);
-    }
+    @Enumerated(EnumType.STRING)
+    private Category category;
 }

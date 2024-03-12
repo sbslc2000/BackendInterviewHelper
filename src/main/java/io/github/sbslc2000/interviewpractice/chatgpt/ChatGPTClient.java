@@ -17,20 +17,22 @@ public class ChatGPTClient {
 
     private final RestTemplate restTemplate;
 
+    private static final String REQUEST_URL = "https://api.openai.com/v1/chat/completions";
+
     public ChatGPTResponse request(ChatGPTRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + secretKey);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.add("Authorization", "Bearer " + secretKey);
+        HttpEntity<ChatGPTRequest> entity = new HttpEntity<>(request, headers);
 
-            HttpEntity<ChatGPTRequest> entity = new HttpEntity<>(request, headers);
+        ResponseEntity<ChatGPTResponse> res = restTemplate.exchange(
+                REQUEST_URL,
+                HttpMethod.POST,
+                entity,
+                ChatGPTResponse.class
+        );
 
-            ResponseEntity<ChatGPTResponse> res = restTemplate.exchange("https://api.openai.com/v1/chat/completions",
-                    HttpMethod.POST,
-                    entity,
-                    ChatGPTResponse.class
-            );
-
-            return res.getBody();
+        return res.getBody();
     }
 }

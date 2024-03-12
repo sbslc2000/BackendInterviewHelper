@@ -11,8 +11,9 @@ const PageWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
     padding: 40px 20px;
+    
+    width: 100vw;
     
     overflow: scroll;
     

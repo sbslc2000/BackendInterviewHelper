@@ -3,6 +3,9 @@ package io.github.sbslc2000.interviewpractice.quiz;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
     /**
@@ -12,4 +15,9 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
      */
     @Query(value = "SELECT * FROM quiz where level = :level ORDER BY RAND() LIMIT 1", nativeQuery = true)
     Quiz getRandomByLevel(Integer level);
+
+    List<Quiz> findAllByOrderByLevelAscCategoryAsc();
+
+    @Query(value = "SELECT * FROM quiz where category = :categoryName ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    Quiz getRandomByCategory(String categoryName);
 }

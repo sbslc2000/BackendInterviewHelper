@@ -1,10 +1,10 @@
-package io.github.sbslc2000.interviewpractice.analysis;
+package io.github.sbslc2000.interviewpractice.analysis.dto;
 
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 public class AnalysisResult {
 
     private String exampleAnswer;

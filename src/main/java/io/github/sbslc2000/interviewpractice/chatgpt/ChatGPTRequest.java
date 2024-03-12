@@ -7,11 +7,12 @@ import java.util.List;
 
 @Data
 public class ChatGPTRequest {
-    private String model = "gpt-3.5-turbo";
+    private String model;
     private List<Message> messages;
 
-    public static ChatGPTRequest of(Message ... messages) {
+    public static ChatGPTRequest of(Model model, Message ... messages) {
         ChatGPTRequest request = new ChatGPTRequest();
+        request.model = model.getModelName();
         request.setMessages(List.of(messages));
         return request;
     }

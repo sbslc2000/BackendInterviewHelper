@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
-import {getQuiz} from "../api/quiz";
-import PageWrapper from "../component/ui/PageWrapper";
+import {getQuiz, getRandomQuizByCategory, getRandomQuizByLevel} from "../../api/quiz";
+import PageWrapper from "../../component/ui/PageWrapper";
 import styled from "styled-components";
 import SpeechRecognition, {useSpeechRecognition} from "react-speech-recognition";
-import AnalysisResult from "./quiz/AnalysisResult";
+import AnalysisResult from "./AnalysisResult";
+import VoiceRecording from "./VoiceRecording";
+import BackButton from "../../component/ui/BackButton";
 
 const AnswerTextArea = styled.textarea`
     width: 600px;
@@ -24,6 +26,7 @@ const AnswerButton = styled.button`
         cursor: pointer;
         background-color: ${props => props.listening ? "#ff8085cc" : "#72aee6cc"};
     }
+    
 `;
 
 const SubmitButton = styled.button`
@@ -32,42 +35,37 @@ const SubmitButton = styled.button`
     height: 40px;
     border: none;
     border-radius: 40px;
-    
+
     &:hover {
         cursor: pointer;
         background-color: #68de7ccc;
     }
 `;
 
+/**
+ * url로부터 category를 가져오는 함수입니다.
+ */
+const getCategory = () => {
+    const category = new URLSearchParams(window.location.search).get('category');
+    console.log(category);
+    return category;
 
-const BackButton = styled.button`
-    
-    margin-top: 20px;
-    color: white;
-    background-color: #3c434a;
-    width: 200px;
-    height: 40px;
-    border: none;
-    border-radius: 40px;
-
-    &:hover {
-        cursor: pointer;
-        background-color: #3c434acc;
-    }
-`;
+}
 
 /**
  * url로부터 level을 가져오는 함수입니다.
- * level이 없을 경우 메인 페이지로 이동합니다.
  */
 const getLevel = () => {
     const level = new URLSearchParams(window.location.search).get('level');
-    if (level === null) {
-        window.location.href = '/';
-    }
     console.log(level);
-
     return level;
+}
+
+const getQuizId = () => {
+    const quizId = new URLSearchParams(window.location.search).get('quizId');
+    console.log(quizId);
+    return quizId;
+
 }
 
 const QuizPage = () => {
@@ -85,8 +83,34 @@ const QuizPage = () => {
 
     const init = async () => {
         //set quiz
-        const quiz = await getQuiz(getLevel());
-        setQuiz(quiz);
+
+        //category 먼저 조사
+        const category = getCategory();
+        if (category !== null) {
+            const quiz = await getRandomQuizByCategory(category);
+            setQuiz(quiz);
+            return;
+        }
+
+        //이후 레벨 조사
+        const level = getLevel();
+        if (level !== null) {
+            const quiz = await getRandomQuizByLevel(getLevel());
+            setQuiz(quiz);
+            return;
+
+        }
+
+        //quizId 조사
+        const quizId = getQuizId();
+        if(quizId !== null) {
+            const quiz = await getQuiz(quizId);
+            setQuiz(quiz);
+            return;
+        }
+
+        //go main page
+        window.location.href = '/';
     }
 
     useEffect(() => {
@@ -116,23 +140,24 @@ const QuizPage = () => {
         setSubmitted(true);
     }
 
+    //브라우저가 음성인식을 지원하지 않는 경우 처리
     if (!browserSupportsSpeechRecognition) {
         return <span>Browser doesn't support speech recognition.</span>;
     }
 
     return (
         <PageWrapper>
-            <h1 style={{width:600}}>Q.{quiz.id} {quiz.question}</h1>
+            <h1 style={{width: 600}}>Q.{quiz.id} {quiz.question}</h1>
             <AnswerButton
                 listening={listening}
-                onClick={toggleAnswerButton}
-            >
-                {listening ? "중단하기" : "답변하기"}
+                onClick={toggleAnswerButton}>
+                {listening ? "중단하기" : "답변하기 (마이크 권한 필요)"}
             </AnswerButton>
+            {listening ? <VoiceRecording/> : null}
             <AnswerTextArea
                 onChange={onAnswerChange}
                 value={answer}
-            ></AnswerTextArea>
+            />
             <SubmitButton onClick={onSubmit}>제출하기</SubmitButton>
             {submitted &&
                 <AnalysisResult
@@ -140,9 +165,7 @@ const QuizPage = () => {
                     answer={answer}
                 />
             }
-            <BackButton onClick={() => window.location.href = '/'}>
-                처음으로
-            </BackButton>
+            <BackButton/>
         </PageWrapper>
     );
 }
